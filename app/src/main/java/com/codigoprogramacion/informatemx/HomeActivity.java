@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.codigoprogramacion.informatemx.API.DiputadosAPI;
 import com.codigoprogramacion.informatemx.API.InegiAPI;
-import com.codigoprogramacion.informatemx.API.XML;
+
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
