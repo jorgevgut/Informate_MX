@@ -20,13 +20,15 @@ import android.widget.TextView;
 
 import com.codigoprogramacion.informatemx.API.DiputadosAPI;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.StringWriter;
 
 import retrofit.RestAdapter;
 import retrofit.client.Response;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.util.functions.Action1;
+import rx.functions.Action1;
 
 
 public class HomeActivity extends Activity
@@ -70,7 +72,7 @@ public class HomeActivity extends Activity
                                 System.out.println("Status code:"+response.getStatus());
                                 try{
                                     StringWriter writer = new StringWriter();
-                                    IOUtils.copy(response.getBody().in(),writer,"UTF-8");
+                                    IOUtils.copy(response.getBody().in(), writer, "UTF-8");
                                     System.out.println(writer.toString());
 
                                 }catch (IOException e){}
