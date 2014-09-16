@@ -19,8 +19,12 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.codigoprogramacion.informatemx.API.DiputadosAPI;
+import com.codigoprogramacion.informatemx.API.InegiAPI;
+import com.codigoprogramacion.informatemx.API.XML;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -59,11 +63,12 @@ public class HomeActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://congresorest.appspot.com")
+                .setEndpoint("http://www2.inegi.org.mx/servicioindicadores/Indicadores.asmx")//.setEndpoint("http://congresorest.appspot.com")
                 .build();
 
-        DiputadosAPI service = restAdapter.create(DiputadosAPI.class);
-        service.getDiputados().observeOn(AndroidSchedulers.mainThread())
+        InegiAPI service = restAdapter.create(InegiAPI.class);
+        //1002000001 poblacion total
+        service.getIndicadores("1002000001","08","1999","2014").observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         new Action1<Response>() {
 
@@ -73,7 +78,12 @@ public class HomeActivity extends Activity
                                 try{
                                     StringWriter writer = new StringWriter();
                                     IOUtils.copy(response.getBody().in(), writer, "UTF-8");
-                                    System.out.println(writer.toString());
+
+                                    /*try{
+                                        JSONObject obj = XML.toJSONObject(writer.toString());
+                                        System.out.println(obj.toString());
+                                    }catch (JSONException e){}*/
+
 
                                 }catch (IOException e){}
                             }
