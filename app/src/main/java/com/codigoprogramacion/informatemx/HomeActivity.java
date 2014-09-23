@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.codigoprogramacion.informatemx.API.DiputadosAPI;
 import com.codigoprogramacion.informatemx.API.InegiAPI;
+import com.codigoprogramacion.informatemx.Helpers.XMLParser;
 
 
 import org.apache.commons.io.IOUtils;
@@ -78,11 +79,14 @@ public class HomeActivity extends Activity
                                 try{
                                     StringWriter writer = new StringWriter();
                                     IOUtils.copy(response.getBody().in(), writer, "UTF-8");
-
-                                    /*try{
-                                        JSONObject obj = XML.toJSONObject(writer.toString());
+                                    System.out.println(writer.toString());
+                                    try{
+                                        JSONObject obj = XMLParser.toJSON(response.getBody().in());
+                                        System.out.println("Obj..");
                                         System.out.println(obj.toString());
-                                    }catch (JSONException e){}*/
+                                    }catch (JSONException e){}
+                                    catch (Exception e){
+                                        System.out.println("superFail");}
 
 
                                 }catch (IOException e){}
