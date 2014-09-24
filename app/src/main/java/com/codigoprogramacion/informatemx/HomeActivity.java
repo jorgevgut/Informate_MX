@@ -17,18 +17,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.PointLabelFormatter;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYSeries;
 import com.codigoprogramacion.informatemx.API.DiputadosAPI;
 import com.codigoprogramacion.informatemx.API.InegiAPI;
 import com.codigoprogramacion.informatemx.Helpers.XMLParser;
 
 
+import org.achartengine.ChartFactory;
+import org.achartengine.GraphicalView;
+import org.achartengine.chart.PointStyle;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.model.XYSeries;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +59,7 @@ public class HomeActivity extends Activity
      */
     private CharSequence mTitle;
 
-    private XYPlot plot;
+    //private XYPlot plot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,55 +77,10 @@ public class HomeActivity extends Activity
 
 
 
-        //Plot example
-        // initialize our XYPlot reference:
-        plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
-
-        // Create a couple arrays of y-values to plot:
-        Number[] series1Numbers = {1, 8, 5, 2, 7, 4};
-        Number[] series2Numbers = {4, 6, 3, 8, 2, 10};
-        // Turn the above arrays into XYSeries':
-        XYSeries series1 = new SimpleXYSeries(
-                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
-                "Series1");                             // Set the display title of the series
-
-        // same as above
-        XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
-
-        // Create a formatter to use for drawing a series using LineAndPointRenderer
-        // and configure it from xml:
-        /* LineAndPointFormatter series1Format = new LineAndPointFormatter();
-        series1Format.setPointLabelFormatter(new PointLabelFormatter());
-        series1Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter_with_plf1);*/
-
-
-        LineAndPointFormatter series1Format = new LineAndPointFormatter(Color.RED, Color.GREEN,Color.BLUE,null);
-
-        // add a new series' to the xyplot:
-        plot.addSeries(series1, series1Format);
-
-        // same as above:
-        /*LineAndPointFormatter series2Format = new LineAndPointFormatter();
-        series2Format.setPointLabelFormatter(new PointLabelFormatter());
-        series2Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter_with_plf2);*/
-        plot.addSeries(series2, series1Format);
-
-        // reduce the number of range labels
-        plot.setTicksPerRangeLabel(3);
-        plot.getGraphWidget().setDomainLabelOrientation(-45);
 
 
 
-
-
-
-
-
-
-/*        RestAdapter restAdapter = new RestAdapter.Builder()
+/*        RestAdapter restAdapter = new RestcAdapter.Builder()
                 .setEndpoint("http://www2.inegi.org.mx/servicioindicadores/Indicadores.asmx")//.setEndpoint("http://congresorest.appspot.com")
                 .build();
 
@@ -242,6 +200,48 @@ public class HomeActivity extends Activity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+
+            //Plot example
+            LinearLayout lcontainer = (LinearLayout)rootView.findViewById(R.id.chart_container);
+
+            XYSeries series = new XYSeries("Catalogo");
+            XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+            for(int i=0;i< 50;i++){
+                series.add(i,Math.sin((float)i/3f));
+            }
+            dataset.addSeries(series);
+
+// Now we create the renderer
+            XYSeriesRenderer renderer = new XYSeriesRenderer();
+            renderer.setLineWidth(2);
+            renderer.setColor(Color.RED);
+// Include low and max value
+            renderer.setDisplayBoundingPoints(true);
+// we add point markers
+            renderer.setPointStyle(PointStyle.CIRCLE);
+            renderer.setPointStrokeWidth(3);
+
+            XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
+            mRenderer.addSeriesRenderer(renderer);
+
+
+// We want to avoid black border
+            mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent margins
+// Disable Pan on two axis
+            mRenderer.setPanEnabled(false, false);
+            mRenderer.setYAxisMax(1.5);
+            mRenderer.setYAxisMin(-1.5);
+            mRenderer.setShowGrid(true); // we show the grid
+
+
+            GraphicalView chartView = ChartFactory.getLineChartView(getActivity(),dataset, mRenderer);
+            // - See more at: htt
+            // p://www.survivingwithandroid.com/2014/06/android-chart-tutorial-achartengine.html#sthash.ZiGDS6PF.dpuf
+
+
+            lcontainer.addView(chartView,0);
+
+
             return rootView;
         }
 
