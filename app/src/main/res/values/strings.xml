@@ -14,7 +14,8 @@
     <string name="dialog_ok">¡Entendido!</string>
     <string name="error_conex">Hubo un problema con la conexión a Internet</string>
     <string name="error_datos">Ups! Parece que estos datos no estan disponibles.</string>
-
+    <string name="sel_ubicacion">Ubicación</string>
+    <string name="sel_variable">Variable</string>
     <!--acerca de -->
     <!-- información disponible-->
     <string name="acerca_de">
