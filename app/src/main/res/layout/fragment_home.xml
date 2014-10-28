@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="60dp"
         android:background="@drawable/white_background"
+        android:padding="10dp"
         >
 
 
@@ -39,19 +40,41 @@
         </LinearLayout>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_below="@id/controles_container"
-        android:id="@+id/chart_container"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <TextView
-            android:id="@+id/section_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/controles_container"
+            >
 
-    </LinearLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:id="@+id/chart_container"
+                    android:orientation="vertical">
+
+                    </LinearLayout>
+                <TextView
+                    android:id="@+id/section_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TableLayout
+                    android:id="@+id/data_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="7dp">
+                </TableLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
 
     </RelativeLayout>
 
@@ -62,7 +85,7 @@
         android:layout_width="match_parent"
         android:padding="10dp"
         android:textSize="25dp"
-        android:text="Convocar datos"
+        android:text="@string/btn_consultar"
         android:background="@drawable/btn_background"
         />
 </RelativeLayout>

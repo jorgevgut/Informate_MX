@@ -2,14 +2,29 @@
 <resources>
 
     <string name="app_name">Informate MX</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section1">Consulta de Información (INEGI)</string>
+    <string name="title_section2">Información disponible</string>
+    <string name="title_section3">Acerca de</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_splash">SplashActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="btn_consultar">Consultar Información</string>
+    <string name="dialog_ok">¡Entendido!</string>
+    <string name="error_conex">Hubo un problema con la conexión a Internet</string>
+    <string name="error_datos">Ups! Parece que estos datos no estan disponibles.</string>
 
+    <!--acerca de -->
+    <!-- información disponible-->
+    <string name="acerca_de">
+        InformateMX es unan aplicación para Android de código abierto desarrollada por Jorge Villalobos.<br/>
+        La aplicación tiene el proposito de consultar fuentes de datos abiertos en México para su visualización por parte de los usuarios.<br/>
+
+    </string>
+    <string name="available_info">Version 1: Actualmente la información que puedes encontrar en esta aplicación se encuentra
+            limitada a un catalago limitado del INEGI, para el cual se puede consultar información. En futuras versiones se busca
+            aumentar el catalogo de información que puede ser consultada por medio de esta aplicación. Para solicitar mayor información puede ponerse en contacto
+            con el autor.
+    </string>
 </resources>

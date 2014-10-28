@@ -3,12 +3,18 @@ package com.codigoprogramacion.informatemx;
 import android.app.Activity;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +26,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.codigoprogramacion.informatemx.API.DiputadosAPI;
@@ -83,15 +91,70 @@ public class HomeActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
 
+
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+
+        /*
+        Save for later..
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
+        */
+        AlertDialog.Builder builder;
+        final TextView message = new TextView(this);
+        final SpannableString ss =
+                new SpannableString("  Contacto: http://twitter.com/jorge_vgut  jorgev.dev@gmail.com");
+        Linkify.addLinks(ss,Linkify.ALL);
+
+        message.setText(ss);
+        message.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+        switch (position){
+
+            case 0:
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .commit();
+                break;
+
+            case 1:
+                 builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.available_info)
+                        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // FIRE ZE MISSILES!
+                            }
+                        })
+                        .setView(message);
+                builder.create().show();
+
+                break;
+
+            case 2:
+
+
+                builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.acerca_de)
+                        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // FIRE ZE MISSILES!
+                            }
+                        })
+                       .setView(message)
+                ;
+                builder.create().show();
+
+                break;
+        }
+
+
     }
 
     public void onSectionAttached(int number) {
@@ -122,8 +185,8 @@ public class HomeActivity extends Activity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.home, menu);
-            restoreActionBar();
+            //getMenuInflater().inflate(R.menu.home, menu);
+            //restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -134,10 +197,7 @@ public class HomeActivity extends Activity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -263,7 +323,7 @@ public class HomeActivity extends Activity
                         System.out.println("data: "+selected_data+" "+selected_location);
                         service.getIndicadores(
                                 selected_data,
-                                selected_location,"1999","2014")
+                                selected_location,"1990","2014")
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(
                                         new Action1<Response>() {
@@ -279,6 +339,107 @@ public class HomeActivity extends Activity
                                                     try {
                                                         JSONObject obj = XMLParser.toJSON(response.getBody().in());
                                                         JSONArray data = obj.getJSONArray("data");
+
+                                                        if(data.length() == 0){
+                                                            noHayDatosDialog();
+                                                            return;
+                                                        }
+
+                                                        //Fill tabl
+                                                        final JSONArray mdata = data;
+                                                       // new Handler().post(new Runnable() {
+                                                       //     @Override
+                                                       //     public void run() {
+                                                                System.out.println("Comenzando con tabla");
+                                                                TableLayout table = (TableLayout)getActivity().findViewById(R.id.data_table);
+                                                                table.removeAllViews();
+
+
+                                                                TableRow row = new TableRow(getActivity());
+                                                                TextView year = new TextView(getActivity());
+                                                                TextView dvalue = new TextView(getActivity());
+                                                                TextView loc = new TextView(getActivity());
+                                                                View divider1 = new View(getActivity());
+                                                                View divider2 = new View(getActivity());
+
+                                                                divider1.setMinimumWidth(50);
+                                                                divider2.setMinimumWidth(50);
+
+                                                                loc.setText("Ubicación");
+                                                                loc.setPadding(0, 0, 15, 0);
+                                                                loc.setTextSize(17);
+                                                                loc.setTextColor(Color.BLACK);
+                                                                dvalue.setText("Valor");
+                                                                dvalue.setPadding(0, 0, 15, 0);
+                                                                dvalue.setTextColor(Color.BLACK);
+                                                                dvalue.setTextSize(17);
+                                                                year.setPadding(0, 0, 15, 0);
+                                                                year.setTextColor(Color.BLACK);
+                                                                year.setTextSize(17);
+                                                                year.setText("Fecha");
+
+                                                                row.addView(loc);
+                                                                row.addView(divider1);
+                                                                row.addView(year);
+                                                                row.addView(divider2);
+                                                                row.addView(dvalue);
+                                                                table.addView(row);
+
+                                                                View line = new View(getActivity());
+                                                                line.setMinimumWidth(row.getWidth());
+                                                                line.setMinimumHeight(1);
+                                                                line.setBackgroundColor(Color.BLACK);
+                                                                row.setGravity(Gravity.CENTER);
+                                                                row.setPadding(0,0,0,5);
+                                                                table.addView(line);
+
+                                                                for(int i = 0; i < mdata.length();i++){
+                                                                    try{
+                                                                        row = new TableRow(getActivity());
+                                                                        year = new TextView(getActivity());
+                                                                        dvalue = new TextView(getActivity());
+                                                                        loc = new TextView(getActivity());
+                                                                        divider1 = new View(getActivity());
+                                                                        divider2 = new View(getActivity());
+
+                                                                        divider1.setMinimumWidth(50);
+                                                                        divider2.setMinimumWidth(50);
+
+                                                                        loc.setText(((Spinner)getActivity().findViewById(R.id.inegi_geo_spinner)).getSelectedItem().toString());
+                                                                        loc.setPadding(0, 0, 15, 0);
+                                                                        loc.setTextSize(17);
+                                                                        loc.setTextColor(Color.BLACK);
+                                                                        dvalue.setText(mdata.getJSONObject(i).getString(key_value));
+                                                                        dvalue.setPadding(0, 0, 15, 0);
+                                                                        dvalue.setTextColor(Color.BLACK);
+                                                                        dvalue.setTextSize(17);
+                                                                        year.setPadding(0, 0, 15, 0);
+                                                                        year.setTextColor(Color.BLACK);
+                                                                        year.setTextSize(17);
+                                                                        year.setText(mdata.getJSONObject(i).getString(key_time));
+
+                                                                        row.addView(loc);
+                                                                        row.addView(divider1);
+                                                                        row.addView(year);
+                                                                        row.addView(divider2);
+                                                                        row.addView(dvalue);
+                                                                        table.addView(row);
+
+                                                                        line = new View(getActivity());
+                                                                        line.setMinimumWidth(row.getWidth());
+                                                                        line.setMinimumHeight(1);
+                                                                        line.setBackgroundColor(Color.BLACK);
+                                                                        row.setGravity(Gravity.CENTER);
+                                                                        row.setPadding(0,0,0,5);
+                                                                        table.addView(line);
+
+                                                                    }catch (JSONException e){}
+
+                                                                }
+                                                        //    }
+                                                        //});
+
+
                                                         //Plot example
                                                         LinearLayout lcontainer = (LinearLayout)getActivity().findViewById(R.id.chart_container);
 
@@ -303,21 +464,24 @@ public class HomeActivity extends Activity
                                                         // Now we create the renderer
                                                         XYSeriesRenderer renderer = new XYSeriesRenderer();
                                                         renderer.setLineWidth(2);
-                                                        renderer.setColor(Color.RED);
-// Include low and max value
+                                                        renderer.setColor(Color.DKGRAY);
+                                                        // Include low and max value
 
                                                         renderer.setDisplayBoundingPoints(true);
-// we add point markers
+                                                        // we add point markers
                                                         renderer.setPointStyle(PointStyle.CIRCLE);
-                                                        renderer.setPointStrokeWidth(3);
+                                                        renderer.setPointStrokeWidth(5);
+
 
                                                         XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
                                                         mRenderer.addSeriesRenderer(renderer);
-
-
-// We want to avoid black border
+                                                        mRenderer.setLegendTextSize(15f);
+                                                        mRenderer.setLabelsTextSize(15f);
+                                                        mRenderer.setXLabelsColor(Color.BLACK);
+                                                        mRenderer.setLabelsColor(Color.BLACK);
+                                                        // We want to avoid black border
                                                         mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent margins
-// Disable Pan on two axis
+                                                        // Disable Pan on two axis
                                                         mRenderer.setPanEnabled(false, false);
                                                         mRenderer.setYAxisMax(max*1.15);
                                                         mRenderer.setYAxisMin(min*0.85);
@@ -334,14 +498,30 @@ public class HomeActivity extends Activity
                                                         //System.out.println("Obj..");
                                                         //System.out.println(obj.toString());
                                                     } catch (JSONException e) {
-                                                    } catch (Exception e) {
-                                                        System.out.println("superFail");
+                                                    }catch (NullPointerException e){
+                                                        //la NullPointerException se lanza cuando el adaptador no encuentra datos
+                                                        noHayDatosDialog();
+                                                    }
+                                                    catch (Exception e) {
+
                                                     }
 
 
                                                 } catch (IOException e) {
                                                     e.printStackTrace();
                                                 }
+                                            }
+                                        },new Action1<Throwable>() {
+                                            @Override
+                                            public void call(Throwable throwable) {
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                builder.setMessage(R.string.error_conex)
+                                                        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                // FIRE ZE MISSILES!
+                                                            }
+                                                        });
+                                                builder.create().show();
                                             }
                                         }
                                 );
@@ -358,6 +538,17 @@ public class HomeActivity extends Activity
                 }
             });
             return rootView;
+        }
+
+        public void noHayDatosDialog(){
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.error_datos)
+                    .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // FIRE ZE MISSILES!
+                        }
+                    });
+            builder.create().show();
         }
 
         @Override
