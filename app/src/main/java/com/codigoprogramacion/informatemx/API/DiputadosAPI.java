@@ -11,6 +11,8 @@ import rx.Observable;
 
 public interface DiputadosAPI {
 
+    //PARA OTRA VERSION...
+
     @GET("/diputado/")
     Observable<Response> getDiputados();
 

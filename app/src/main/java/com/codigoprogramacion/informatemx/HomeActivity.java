@@ -279,16 +279,18 @@ public class HomeActivity extends Activity
                 geoSw.close();geoSw = null;
 
                 for(int i = 0;i < geo_cat_json.length();i++){
-                    System.out.println("Adding: "+geo_cat_json.getJSONObject(i).getString("name"));
+                    //System.out.println("Adding: "+geo_cat_json.getJSONObject(i).getString("name"));
                     geo_adapter.add(geo_cat_json.getJSONObject(i).getString("name"));
                 }
 
                 for(int i = 0;i < inegi_cat_json.length();i++){
-                    System.out.println("Adding: " + inegi_cat_json.getJSONObject(i).getString("name"));
+                    //System.out.println("Adding: " + inegi_cat_json.getJSONObject(i).getString("name"));
                     inegi_adapter.add(inegi_cat_json.getJSONObject(i).getString("name"));
                 }
 
-            }catch (IOException e){e.printStackTrace();}
+            }catch (IOException e){
+                //e.printStackTrace();
+            }
             catch (JSONException e){}
 
             geo_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -301,7 +303,7 @@ public class HomeActivity extends Activity
                 @Override
                 public void onClick(View view) {
 
-                    System.out.println("CLICK!!");
+                    //System.out.println("CLICK!!");
                 RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://www2.inegi.org.mx/servicioindicadores/Indicadores.asmx")//.setEndpoint("http://congresorest.appspot.com")
                 .build();
@@ -316,11 +318,11 @@ public class HomeActivity extends Activity
 
 
                         final JSONArray catalogo_a = new JSONArray(catalogo.toString());
-                        System.out.println("Catalogo poblacion total codigo:"+
-                                catalogo_a.getJSONObject(0).getString("number"));
+                        //System.out.println("Catalogo poblacion total codigo:"+
+                        //       catalogo_a.getJSONObject(0).getString("number"));
 
                         reloadParams();
-                        System.out.println("data: "+selected_data+" "+selected_location);
+                        //System.out.println("data: "+selected_data+" "+selected_location);
                         service.getIndicadores(
                                 selected_data,
                                 selected_location,"1990","2014")
@@ -330,11 +332,11 @@ public class HomeActivity extends Activity
 
                                             @Override
                                             public void call(Response response) {
-                                                System.out.println("Status code:" + response.getStatus());
+                                                //System.out.println("Status code:" + response.getStatus());
                                                 try {
                                                     StringWriter writer = new StringWriter();
                                                     IOUtils.copy(response.getBody().in(), writer, "UTF-8");
-                                                    System.out.println(writer.toString());
+                                                    //System.out.println(writer.toString());
                                                     double min=0,max=0;
                                                     try {
                                                         JSONObject obj = XMLParser.toJSON(response.getBody().in());
@@ -350,7 +352,7 @@ public class HomeActivity extends Activity
                                                        // new Handler().post(new Runnable() {
                                                        //     @Override
                                                        //     public void run() {
-                                                                System.out.println("Comenzando con tabla");
+                                                                //System.out.println("Comenzando con tabla");
                                                                 TableLayout table = (TableLayout)getActivity().findViewById(R.id.data_table);
                                                                 table.removeAllViews();
 
@@ -495,8 +497,8 @@ public class HomeActivity extends Activity
 
                                                         lcontainer.addView(chartView,0);
 
-                                                        //System.out.println("Obj..");
-                                                        //System.out.println(obj.toString());
+                                                        ////System.out.println("Obj..");
+                                                        ////System.out.println(obj.toString());
                                                     } catch (JSONException e) {
                                                     }catch (NullPointerException e){
                                                         //la NullPointerException se lanza cuando el adaptador no encuentra datos
@@ -508,7 +510,7 @@ public class HomeActivity extends Activity
 
 
                                                 } catch (IOException e) {
-                                                    e.printStackTrace();
+                                                    //e.printStackTrace();
                                                 }
                                             }
                                         },new Action1<Throwable>() {
@@ -529,8 +531,10 @@ public class HomeActivity extends Activity
 
 
                     }catch (IOException e){
-                        e.printStackTrace();}
-                    catch (JSONException e ){e.printStackTrace();}
+                        //e.printStackTrace();
+                        }
+                    catch (JSONException e ){//e.printStackTrace();
+                     }
 
 
                 // closing comment */
